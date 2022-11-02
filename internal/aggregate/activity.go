@@ -2,6 +2,8 @@ package aggregate
 
 import "errors"
 
+type Activities []*Activity
+
 type Activity struct {
 	ID    uint64
 	Email string
@@ -21,10 +23,10 @@ func NewActivity(email, title string) (*Activity, error) {
 	}, nil
 }
 
-func RebuildActivity(id uint64, email, title string) (*Activity, error) {
+func RebuildActivity(id uint64, email, title string) *Activity {
 	return &Activity{
 		ID:    id,
 		Email: email,
 		Title: title,
-	}, nil
+	}
 }
