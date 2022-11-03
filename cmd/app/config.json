@@ -1,17 +1,16 @@
 {
     "debug": true,
     "server": {
-      "address": ":9090"
+      "address": ":8001"
     },
     "context":{
       "timeout":2
     },
     "database": {
-        "host": "mysql",
+        "host": "localhost",
         "port": "3306",
         "user": "bagus",
         "pass": "Bagus#1234",
-        "name": "myorbit_new_deliveries"
+        "name": "ddd_activity_golang"
     }
-  
   }

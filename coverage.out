@@ -1,0 +1,20 @@
+mode: set
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:17.77,19.2 1 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:21.106,23.16 2 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:28.2,28.15 1 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:34.2,35.18 2 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:51.2,52.43 2 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:60.2,60.24 1 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:23.16,26.3 2 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:28.15,30.20 2 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:30.20,32.4 1 0
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:35.18,43.17 3 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:48.3,48.41 1 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:43.17,46.4 2 0
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:52.43,58.3 1 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:63.87,67.16 3 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:71.2,71.8 1 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:67.16,69.3 1 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:74.86,82.16 3 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:85.2,85.12 1 1
+ddd-to-do-list/internal/infrastructure/database/mysql/repository/activity_repository_mysql.go:82.16,84.3 1 1
