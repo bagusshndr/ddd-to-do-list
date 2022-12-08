@@ -4,6 +4,7 @@ import (
 	"ddd-to-do-list/internal/aggregate"
 	"ddd-to-do-list/internal/repository"
 	"errors"
+	"log"
 	"regexp"
 	"testing"
 
@@ -17,7 +18,7 @@ type activityRepositoryMysqlTest struct {
 	activityMYSQL repository.ActivityRepository
 }
 
-func (t *activityRepositoryMysqlTest) TestFetch() {
+func (t *activityRepositoryMysqlTest) TestGetActivity() {
 	activity := aggregate.RebuildActivity(1, "bagus@bagus.com", "kerja bro")
 	query := `SELECT id, email, title FROM activities`
 	t.Run("success", func() {
@@ -46,6 +47,41 @@ func (t *activityRepositoryMysqlTest) TestFetch() {
 		t.Nil(actualActivity)
 		t.Error(err)
 	})
+}
+
+func (t *activityRepositoryMysqlTest) TestGetActivityByID() {
+	activity := aggregate.RebuildActivity(1, "bagus@bagus.com", "kerja bro")
+	query := `SELECT id, email, title FROM activities WHERE id = ?`
+	t.Run("success", func() {
+		rows := sqlmock.NewRows([]string{
+			"id",
+			"email",
+			"title",
+		}).AddRow(
+			activity.ID,
+			activity.Email,
+			activity.Title,
+		)
+
+		t.mock.ExpectQuery(regexp.QuoteMeta(query)).WithArgs(activity.ID).WillReturnRows(rows)
+
+		actualActivity, err := t.activityMYSQL.GetActivityByID(activity.ID)
+
+		log.Println(actualActivity)
+		t.NotNil(actualActivity)
+		t.NoError(err)
+	})
+
+	t.Run("failed", func() {
+		t.mock.ExpectQuery(regexp.QuoteMeta(query)).WithArgs(activity.ID).WillReturnError(errors.New(""))
+
+		actualActivity, err := t.activityMYSQL.GetActivityByID(activity.ID)
+
+		log.Println(actualActivity)
+		t.Nil(actualActivity)
+		t.Error(err)
+	})
+
 }
 
 func (t *activityRepositoryMysqlTest) TestCreate() {

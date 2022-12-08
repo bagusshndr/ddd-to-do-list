@@ -21,3 +21,9 @@ func (m *ActivityMock) CreateActivity(activity *aggregate.Activity) error {
 
 	return args.Error(0)
 }
+
+func (m *ActivityMock) GetActivityByID(id uint64) (res aggregate.Activities, err error) {
+	args := m.Called(id)
+
+	return args.Get(0).(aggregate.Activities), args.Error(1)
+}

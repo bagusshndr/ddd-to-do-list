@@ -12,13 +12,13 @@ import (
 type activityUsecaseTest struct {
 	suite.Suite
 	activity *aggregate.Activity
-	repo     repository.ActivityMock
+	repo     *repository.ActivityMock
 	usecase  ActivityUsecase
 }
 
 func (t *activityUsecaseTest) SetupSuite() {
 	t.activity = aggregate.RebuildActivity(1, "bagus@bagus.com", "kerja bro")
-	t.usecase = NewActivityUsecase(&t.repo)
+	t.usecase = NewActivityUsecase(t.repo)
 }
 
 func (t *activityUsecaseTest) SetupTest() {

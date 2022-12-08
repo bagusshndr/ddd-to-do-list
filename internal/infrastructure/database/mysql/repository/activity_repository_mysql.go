@@ -41,7 +41,6 @@ func (m *activityRepositoryMySQL) fetch(query string, args ...interface{}) (aggr
 		)
 
 		if err != nil {
-			logrus.Error(err)
 			return nil, err
 		}
 
@@ -64,6 +63,17 @@ func (m *activityRepositoryMySQL) GetActivity() (res aggregate.Activities, err e
 	query := `SELECT id, email, title FROM activities`
 
 	res, err = m.fetch(query)
+	if err != nil {
+		return nil, errors.New("")
+	}
+
+	return
+}
+
+func (m *activityRepositoryMySQL) GetActivityByID(id uint64) (res aggregate.Activities, err error) {
+	query := `SELECT id, email, title FROM activities WHERE id = ? LIMIT 1`
+
+	res, err = m.fetch(query, id)
 	if err != nil {
 		return nil, errors.New("")
 	}
