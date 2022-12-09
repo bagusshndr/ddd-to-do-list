@@ -60,7 +60,7 @@ func (m *activityRepositoryMySQL) fetch(query string, args ...interface{}) (aggr
 }
 
 func (m *activityRepositoryMySQL) GetActivity() (res aggregate.Activities, err error) {
-	query := `SELECT id, email, title FROM activities`
+	query := `SELECT id, email, title FROM activity`
 
 	res, err = m.fetch(query)
 	if err != nil {
@@ -71,7 +71,7 @@ func (m *activityRepositoryMySQL) GetActivity() (res aggregate.Activities, err e
 }
 
 func (m *activityRepositoryMySQL) GetActivityByID(id uint64) (res aggregate.Activities, err error) {
-	query := `SELECT id, email, title FROM activities WHERE id = ? LIMIT 1`
+	query := `SELECT id, email, title FROM activity WHERE id = ? LIMIT 1`
 
 	res, err = m.fetch(query, id)
 	if err != nil {
@@ -82,7 +82,7 @@ func (m *activityRepositoryMySQL) GetActivityByID(id uint64) (res aggregate.Acti
 }
 
 func (m *activityRepositoryMySQL) CreateActivity(email, title string) error {
-	query := "INSERT INTO activities (email, title) VALUES(?, ?)"
+	query := "INSERT INTO activity (email, title) VALUES(?, ?)"
 	_, err := m.db.Exec(
 		query,
 		email,
@@ -95,7 +95,7 @@ func (m *activityRepositoryMySQL) CreateActivity(email, title string) error {
 }
 
 func (m *activityRepositoryMySQL) UpdateActivity(id uint64, email, title string) error {
-	query := "UPDATE activities email = ?, title = ? WHERE id = ?"
+	query := "UPDATE activity email = ?, title = ? WHERE id = ?"
 	_, err := m.db.Exec(
 		query,
 		email,

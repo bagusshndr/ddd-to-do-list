@@ -1,7 +1,7 @@
 {
     "debug": true,
     "server": {
-      "address": ":8001"
+      "address": ":8002"
     },
     "context":{
       "timeout":2
@@ -11,6 +11,6 @@
         "port": "3306",
         "user": "bagus",
         "pass": "Bagus#1234",
-        "name": "ddd_activity_golang"
+        "name": "todolist"
     }
   }

@@ -3,83 +3,70 @@ package handler
 import (
 	"ddd-to-do-list/internal/shared"
 	"ddd-to-do-list/internal/usecase"
-	"encoding/json"
 	"log"
-	"net/http"
 	"strconv"
+
+	"github.com/labstack/echo/v4"
 )
 
 type handler struct {
 	usecase usecase.ActivityUsecase
 }
 
-func (h *handler) HandlerGetActivites(res http.ResponseWriter, req *http.Request) {
+func (h *handler) HandlerGetActivites(c echo.Context) error {
 	activities, err := h.usecase.GetActivity()
 	if err != nil {
 		log.Println(err)
 
-		res.WriteHeader(http.StatusBadRequest)
-		res.Write(shared.NewResponse(false, "", err.Error(), nil, nil).JSON())
+		return shared.NewResponse(false, 400, "failed", nil, nil).JSON(c)
 
-		return
 	}
 
-	res.WriteHeader(http.StatusOK)
-	res.Write(shared.NewResponse(true, "success", "", ActivityResponse{}.Response(activities), nil).JSON())
+	return shared.NewResponse(true, 200, "success", nil, ActivityResponse{}.Response(activities)).JSON(c)
 }
 
-func (h *handler) HandlerGetActivitesByUUID(res http.ResponseWriter, req *http.Request) {
-	id := req.URL.Query().Get("id")
+func (h *handler) HandlerGetActivitesByUUID(c echo.Context) error {
+	id := c.QueryParam("id")
 
 	uintID, _ := strconv.ParseUint(id, 10, 64)
 	activities, err := h.usecase.GetActivityByID(uintID)
 	if err != nil {
 		log.Println(err)
 
-		res.WriteHeader(http.StatusBadRequest)
-		res.Write(shared.NewResponse(false, "", err.Error(), nil, nil).JSON())
+		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
 
-		return
 	}
 
-	res.WriteHeader(http.StatusOK)
-	res.Write(shared.NewResponse(true, "success", "", ActivityResponse{}.Response(activities), nil).JSON())
+	return shared.NewResponse(true, 200, "success", ActivityResponse{}.Response(activities), nil).JSON(c)
 }
 
-func (h *handler) HandlerCreateActivity(res http.ResponseWriter, req *http.Request) {
+func (h *handler) HandlerCreateActivity(c echo.Context) error {
 	var body ReqCreateActivity
-	json.NewDecoder(req.Body).Decode(&body)
-
+	c.Bind(&body)
+	// json.NewDecoder(req.Body).Decode(&body)
+	log.Println("LOGC-RE", body.Email)
 	err := h.usecase.CreateActivity(body.Email, body.Title)
 	if err != nil {
 		log.Println(err)
 
-		res.WriteHeader(http.StatusBadRequest)
-		res.Write(shared.NewResponse(false, "", err.Error(), nil, nil).JSON())
-
-		return
+		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
 	}
 
-	res.WriteHeader(http.StatusOK)
-	res.Write(shared.NewResponse(true, "success", "", nil, nil).JSON())
+	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
 }
 
-func (h *handler) HandlerUpdateActivity(res http.ResponseWriter, req *http.Request) {
+func (h *handler) HandlerUpdateActivity(c echo.Context) error {
 	var body ReqUpdateActivity
-	json.NewDecoder(req.Body).Decode(&body)
+	c.Bind(&body)
 
 	err := h.usecase.UpdateActivity(body.ID, body.Email, body.Title)
 	if err != nil {
 		log.Println(err)
 
-		res.WriteHeader(http.StatusBadRequest)
-		res.Write(shared.NewResponse(false, "", err.Error(), nil, nil).JSON())
-
-		return
+		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
 	}
 
-	res.WriteHeader(http.StatusOK)
-	res.Write(shared.NewResponse(true, "success", "", nil, nil).JSON())
+	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
 }
 
 func NewHandler(usecase usecase.ActivityUsecase) *handler {

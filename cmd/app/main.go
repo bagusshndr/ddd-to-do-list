@@ -7,10 +7,11 @@ import (
 	"net/url"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 
 	_activityHttpDelivery "ddd-to-do-list/internal/delivery/handler"
+	routers "ddd-to-do-list/internal/delivery/router"
 	_activityRepo "ddd-to-do-list/internal/infrastructure/database/mysql/repository"
 	_activityUcase "ddd-to-do-list/internal/usecase"
 )
@@ -61,5 +62,8 @@ func main() {
 	ar := _activityRepo.NewMysqlActivityRepository(dbConn)
 	au := _activityUcase.NewActivityUsecase(ar)
 	_activityHttpDelivery.NewHandler(au)
+
+	routers.Router(e, au)
+
 	log.Fatal(e.Start(viper.GetString("server.address")))
 }

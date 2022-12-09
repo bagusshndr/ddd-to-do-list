@@ -3,21 +3,20 @@ package router
 import (
 	"ddd-to-do-list/internal/delivery/handler"
 	"ddd-to-do-list/internal/usecase"
-	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/labstack/echo/v4"
 )
 
-func Router(usecase usecase.ActivityUsecase) *mux.Router {
+func Router(route *echo.Echo, usecase usecase.ActivityUsecase) {
 	h := handler.NewHandler(usecase)
 
-	router := mux.NewRouter()
+	v1 := route.Group("v1")
+	{
+		v1.GET("/list-todo", h.HandlerGetActivites)
+		v1.GET("", h.HandlerGetActivites)
+		// v1.GET("/id", h.HandlerGetActivitesByUUID)
+		v1.POST("/createActivity", h.HandlerCreateActivity)
+		v1.PUT("/updateActivity", h.HandlerUpdateActivity)
+	}
 
-	v1 := router.PathPrefix("/v1").Subrouter()
-	v1.HandleFunc("", h.HandlerGetActivites).Methods(http.MethodGet, http.MethodOptions)
-	v1.HandleFunc("/id", h.HandlerGetActivitesByUUID).Methods(http.MethodGet, http.MethodOptions)
-	v1.HandleFunc("/createActivity", h.HandlerCreateActivity).Methods(http.MethodGet, http.MethodOptions)
-	v1.HandleFunc("/updateActivity", h.HandlerUpdateActivity).Methods(http.MethodGet, http.MethodOptions)
-
-	return router
 }
