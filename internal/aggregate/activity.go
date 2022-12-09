@@ -11,10 +11,6 @@ type Activity struct {
 	Title string
 }
 
-func (d MapActivities) GetActivityID(id uint64) Activity {
-	return d[id]
-}
-
 func NewActivity(email, title string) (*Activity, error) {
 	if email == "" {
 		return &Activity{}, errors.New("email cannot be empty")

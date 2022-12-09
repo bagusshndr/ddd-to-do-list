@@ -13,8 +13,10 @@ func Router(route *echo.Echo, usecaseActivity usecase.ActivityUsecase, usecaseTo
 	v1 := route.Group("v1")
 	{
 		v1.GET("/list-todo", h.HandlerGetActivites)
+		v1.GET("/list-activity", h.HandlerGetTodos)
 		v1.GET("", h.HandlerGetActivitesByID)
 		v1.POST("/createActivity", h.HandlerCreateActivity)
+		v1.POST("/createTodo", h.HandlerCreateTodo)
 		v1.PUT("/updateActivity", h.HandlerUpdateActivity)
 	}
 

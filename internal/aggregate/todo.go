@@ -11,7 +11,16 @@ type Todo struct {
 	Priority   string
 }
 
-func NewTodo(activity MapActivities, title string, isActive int, priority string) (*Todo, error) {
+func NewTodo(activitActivityID int, title string, isActive int, priority string) (*Todo, error) {
+	return &Todo{
+		ActivityID: activitActivityID,
+		Title:      title,
+		IsActive:   isActive,
+		Priority:   priority,
+	}, nil
+}
+
+func NewTodos(activity MapActivities, title string, isActive int, priority string) (*Todo, error) {
 	return &Todo{
 		Activity: activity,
 		Title:    title,

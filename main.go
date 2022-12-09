@@ -4,11 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"net/url"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
-	"github.com/spf13/viper"
 
 	_activityHttpDelivery "ddd-to-do-list/internal/delivery/handler"
 	routers "ddd-to-do-list/internal/delivery/router"
@@ -16,32 +16,25 @@ import (
 	_activityUcase "ddd-to-do-list/internal/usecase"
 )
 
-func init() {
-	viper.SetConfigFile(`config.json`)
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(err)
-	}
-
-	// if viper.GetBool(`debug`) {
-	// 	log.Println("Service RUN on DEBUG mode")
-	// }
-}
-
 func main() {
-	dbHost := viper.GetString(`database.host`)
-	dbPort := viper.GetString(`database.port`)
-	dbUser := viper.GetString(`database.user`)
-	dbPass := viper.GetString(`database.pass`)
-	dbName := viper.GetString(`database.name`)
-	connection := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPass, dbHost, dbPort, dbName)
-	val := url.Values{}
-	val.Add("parseTime", "1")
-	val.Add("loc", "Asia/Jakarta")
-	dsn := fmt.Sprintf("%s?%s", connection, val.Encode())
+	if err := godotenv.Load(".env"); err != nil {
+		log.Println(err)
+		if err = godotenv.Load(".env"); err != nil {
+			return
+		}
+	}
+	dbHost := os.Getenv(`MYSQL_HOST`)
+	dbPort := os.Getenv(`MYSQL_PORT`)
+	dbUser := os.Getenv(`MYSQL_USER`)
+	dbPass := os.Getenv(`MYSQL_PASSWORD`)
+	dbName := os.Getenv(`MYSQL_DBNAME`)
+
+	dsn := fmt.Sprintf("%s:%s@(%s:%s)/%s", dbUser, dbPass, dbHost, dbPort, dbName)
+
 	dbConn, err := sql.Open(`mysql`, dsn)
 
 	if err != nil {
+		fmt.Println("ERROR ANJAY")
 		log.Fatal(err)
 	}
 	err = dbConn.Ping()
@@ -67,5 +60,5 @@ func main() {
 
 	routers.Router(e, au, tu)
 
-	log.Fatal(e.Start(viper.GetString("server.address")))
+	log.Fatal(e.Start(":" + os.Getenv("HTTP_PORT")))
 }
