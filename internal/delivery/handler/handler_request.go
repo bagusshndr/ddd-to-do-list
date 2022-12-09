@@ -1,5 +1,7 @@
 package handler
 
+type ReqCreateTodos []ReqCreateTodo
+
 type ReqCreateActivity struct {
 	Email string `json:"email" validate:"required"`
 	Title string `json:"title" validate:"required"`

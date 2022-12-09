@@ -34,7 +34,6 @@ func main() {
 	dbConn, err := sql.Open(`mysql`, dsn)
 
 	if err != nil {
-		fmt.Println("ERROR ANJAY")
 		log.Fatal(err)
 	}
 	err = dbConn.Ping()

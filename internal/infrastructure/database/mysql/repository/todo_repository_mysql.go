@@ -16,7 +16,7 @@ type todoRepositoryMysql struct {
 
 func NewMysqlTodoRepository(Conn *sql.DB) repository.TodoRepository {
 	return &todoRepositoryMysql{
-		db: &sql.DB{},
+		db: Conn,
 	}
 }
 

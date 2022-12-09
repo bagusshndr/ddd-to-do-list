@@ -69,14 +69,17 @@ func (h *handler) HandlerCreateActivity(c echo.Context) error {
 }
 
 func (h *handler) HandlerCreateTodo(c echo.Context) error {
-	var body ReqCreateTodo
+	var body ReqCreateTodos
 	c.Bind(&body)
-	err := h.usecaseTodo.CreateTodo(body.ActivityGroupID, body.Title, body.Priority)
-	if err != nil {
-		log.Println(err)
+	for _, reqCreateTodo := range body {
+		err := h.usecaseTodo.CreateTodo(reqCreateTodo.ActivityGroupID, reqCreateTodo.Title, reqCreateTodo.Priority)
+		if err != nil {
+			log.Println(err)
 
-		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
+			return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
+		}
 	}
+
 	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
 }
 
