@@ -10,15 +10,19 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type activityRepositoryMySQL struct {
-	db *sql.DB
+type todoRepositoryMysql struct {
+	db       *sql.DB
+	activity activityRepositoryMySQL
 }
 
-func NewMysqlActivityRepository(Conn *sql.DB) repository.ActivityRepository {
-	return &activityRepositoryMySQL{Conn}
+func NewMysqlTodoRepository(Conn *sql.DB, activity activityRepositoryMySQL) repository.TodoRepository {
+	return &todoRepositoryMysql{
+		db:       &sql.DB{},
+		activity: activity,
+	}
 }
 
-func (m *activityRepositoryMySQL) fetch(query string, args ...interface{}) (aggregate.Activities, error) {
+func (m *todoRepositoryMysql) fetch(query string, args ...interface{}) (aggregate.Todos, error) {
 	rows, err := m.db.Query(query, args...)
 	if err != nil {
 		logrus.Error(err)
@@ -31,35 +35,40 @@ func (m *activityRepositoryMySQL) fetch(query string, args ...interface{}) (aggr
 			logrus.Error(errRow)
 		}
 	}()
-	activityDTOs := []model.ActivityDTO{}
+	todoDTOs := []model.TodoDTO{}
 	for rows.Next() {
-		t := model.ActivityDTO{}
+		t := model.TodoDTO{}
 		err = rows.Scan(
 			&t.ID,
-			&t.Email,
+			&t.ActivityGroupID,
 			&t.Title,
+			&t.IsActive,
+			&t.Priority,
 		)
 
 		if err != nil {
 			return nil, err
 		}
 
-		activityDTOs = append(activityDTOs, t)
+		todoDTOs = append(todoDTOs, t)
 	}
 
-	activities := aggregate.Activities{}
-	for _, activityDTO := range activityDTOs {
-		activities = append(activities, aggregate.RebuildActivity(
-			activityDTO.ID,
-			activityDTO.Email,
-			activityDTO.Title,
-		))
+	todos := aggregate.Todos{}
+	for _, todoDTO := range todoDTOs {
+		aggregateTodo, _ := aggregate.RebuildTodos(
+			todoDTO.ID,
+			todoDTO.ActivityGroupID,
+			todoDTO.Title,
+			todoDTO.IsActive,
+			todoDTO.Priority,
+		)
+		todos = append(todos, aggregateTodo)
 	}
 
-	return activities, nil
+	return todos, nil
 }
 
-func (m *activityRepositoryMySQL) GetActivity() (res aggregate.Activities, err error) {
+func (m *todoRepositoryMysql) GetTodo() (res aggregate.Todos, err error) {
 	query := `SELECT id, email, title FROM activities`
 
 	res, err = m.fetch(query)
@@ -70,7 +79,7 @@ func (m *activityRepositoryMySQL) GetActivity() (res aggregate.Activities, err e
 	return
 }
 
-func (m *activityRepositoryMySQL) GetActivityByID(id uint64) (res aggregate.Activities, err error) {
+func (m *todoRepositoryMysql) GetTodoByID(id uint64) (res aggregate.Todos, err error) {
 	query := `SELECT id, email, title FROM activities WHERE id = ? LIMIT 1`
 
 	res, err = m.fetch(query, id)
@@ -81,13 +90,10 @@ func (m *activityRepositoryMySQL) GetActivityByID(id uint64) (res aggregate.Acti
 	return
 }
 
-func (m *activityRepositoryMySQL) CreateActivity(activity *aggregate.Activity) error {
+func (m *todoRepositoryMysql) CreateTodo(todo *aggregate.Todo) error {
 	query := "INSERT INTO activities (id, email, title) VALUES(?, ?, ?)"
 	_, err := m.db.Exec(
 		query,
-		activity.ID,
-		activity.Email,
-		activity.Title,
 	)
 	if err != nil {
 		return err
@@ -95,7 +101,7 @@ func (m *activityRepositoryMySQL) CreateActivity(activity *aggregate.Activity) e
 	return nil
 }
 
-func (s *activityRepositoryMySQL) DeleteActivity(id uint64) error {
+func (s *todoRepositoryMysql) DeleteTodo(id uint64) error {
 	query := "DELETE activities WHERE id = ?"
 	_, err := s.db.Exec(
 		query,

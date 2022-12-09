@@ -14,7 +14,7 @@ func Router(usecase usecase.ActivityUsecase) *mux.Router {
 	router := mux.NewRouter()
 
 	v1 := router.PathPrefix("/v1").Subrouter()
-	v1.HandleFunc("", h.HandlerGetActivites).Methods(http.MethodGet, http.MethodOptions)
+	v1.HandleFunc("/kontolodon", h.HandlerGetActivites).Methods(http.MethodGet, http.MethodOptions)
 
 	return router
 }

@@ -22,9 +22,9 @@ func init() {
 		panic(err)
 	}
 
-	if viper.GetBool(`debug`) {
-		log.Println("Service RUN on DEBUG mode")
-	}
+	// if viper.GetBool(`debug`) {
+	// 	log.Println("Service RUN on DEBUG mode")
+	// }
 }
 
 func main() {
@@ -61,6 +61,5 @@ func main() {
 	ar := _activityRepo.NewMysqlActivityRepository(dbConn)
 	au := _activityUcase.NewActivityUsecase(ar)
 	_activityHttpDelivery.NewHandler(au)
-
 	log.Fatal(e.Start(viper.GetString("server.address")))
 }
