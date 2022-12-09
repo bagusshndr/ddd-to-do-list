@@ -103,13 +103,13 @@ func (m *todoRepositoryMysql) CreateTodo(activitGroupID uint64, title string) er
 	return nil
 }
 
-func (m *todoRepositoryMysql) UpdateTodo(id, uint64, activity_group_id int, title string, is_active int, priority string) error {
+func (m *todoRepositoryMysql) UpdateTodo(id uint64, activitGroupID, IsActive int, title, priority string) error {
 	query := "UPDATE todos SET activity_group_id = ?, title = ?, is_active = ?, priority = ? WHERE id = ?"
 	_, err := m.db.Exec(
 		query,
-		activity_group_id,
+		activitGroupID,
 		title,
-		is_active,
+		IsActive,
 		priority,
 		id,
 	)
