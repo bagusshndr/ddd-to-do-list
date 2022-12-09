@@ -10,67 +10,103 @@ import (
 )
 
 type handler struct {
-	usecase usecase.ActivityUsecase
+	usecaseActivity usecase.ActivityUsecase
+	usecaseTodo     usecase.TodoUsecase
 }
 
 func (h *handler) HandlerGetActivites(c echo.Context) error {
-	activities, err := h.usecase.GetActivity()
+	activities, err := h.usecaseActivity.GetActivity()
 	if err != nil {
 		log.Println(err)
 
 		return shared.NewResponse(false, 400, "failed", nil, nil).JSON(c)
-
 	}
-
 	return shared.NewResponse(true, 200, "success", nil, ActivityResponse{}.Response(activities)).JSON(c)
 }
 
-func (h *handler) HandlerGetActivitesByUUID(c echo.Context) error {
-	id := c.QueryParam("id")
-
-	uintID, _ := strconv.ParseUint(id, 10, 64)
-	activities, err := h.usecase.GetActivityByID(uintID)
+func (h *handler) HandlerGetTodos(c echo.Context) error {
+	todos, err := h.usecaseTodo.GetTodo()
 	if err != nil {
 		log.Println(err)
 
-		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
-
+		return shared.NewResponse(false, 400, "failed", nil, nil).JSON(c)
 	}
+	return shared.NewResponse(true, 200, "success", nil, TodoResponse{}.Response(todos)).JSON(c)
+}
 
+func (h *handler) HandlerGetActivitesByID(c echo.Context) error {
+	id := c.QueryParam("id")
+	uintID, _ := strconv.ParseUint(id, 10, 64)
+	activities, err := h.usecaseActivity.GetActivityByID(uintID)
+	if err != nil {
+		log.Println(err)
+		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
+	}
 	return shared.NewResponse(true, 200, "success", ActivityResponse{}.Response(activities), nil).JSON(c)
+}
+
+func (h *handler) HandlerGetTodosByID(c echo.Context) error {
+	id := c.QueryParam("id")
+	uintID, _ := strconv.ParseUint(id, 10, 64)
+	todos, err := h.usecaseTodo.GetTodoByID(uintID)
+	if err != nil {
+		log.Println(err)
+		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
+	}
+	return shared.NewResponse(true, 200, "success", TodoResponse{}.Response(todos), nil).JSON(c)
 }
 
 func (h *handler) HandlerCreateActivity(c echo.Context) error {
 	var body ReqCreateActivity
 	c.Bind(&body)
-	// json.NewDecoder(req.Body).Decode(&body)
-	log.Println("LOGC-RE", body.Email)
-	err := h.usecase.CreateActivity(body.Email, body.Title)
+	err := h.usecaseActivity.CreateActivity(body.Email, body.Title)
 	if err != nil {
 		log.Println(err)
 
 		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
 	}
+	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
+}
 
+func (h *handler) HandlerCreateTodo(c echo.Context) error {
+	var body ReqCreateTodo
+	c.Bind(&body)
+	err := h.usecaseTodo.CreateTodo(body.ActivityGroupID, body.Title, body.Priority)
+	if err != nil {
+		log.Println(err)
+
+		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
+	}
 	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
 }
 
 func (h *handler) HandlerUpdateActivity(c echo.Context) error {
 	var body ReqUpdateActivity
 	c.Bind(&body)
-
-	err := h.usecase.UpdateActivity(body.ID, body.Email, body.Title)
+	err := h.usecaseActivity.UpdateActivity(body.ID, body.Email, body.Title)
 	if err != nil {
 		log.Println(err)
 
 		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
 	}
-
 	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
 }
 
-func NewHandler(usecase usecase.ActivityUsecase) *handler {
+func (h *handler) HandlerUpdateTodo(c echo.Context) error {
+	var body ReqUpdateTodo
+	c.Bind(&body)
+	err := h.usecaseTodo.UpdateTodo(body.ID, body.ActivityGroupID, body.IsActive, body.Title, body.Priority)
+	if err != nil {
+		log.Println(err)
+
+		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
+	}
+	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
+}
+
+func NewHandler(usecaseActivity usecase.ActivityUsecase, usecaseTodo usecase.TodoUsecase) *handler {
 	return &handler{
-		usecase: usecase,
+		usecaseActivity: usecaseActivity,
+		usecaseTodo:     usecaseTodo,
 	}
 }

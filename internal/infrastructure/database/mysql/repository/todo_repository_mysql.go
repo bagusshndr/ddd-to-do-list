@@ -11,14 +11,12 @@ import (
 )
 
 type todoRepositoryMysql struct {
-	db       *sql.DB
-	activity activityRepositoryMySQL
+	db *sql.DB
 }
 
-func NewMysqlTodoRepository(Conn *sql.DB, activity activityRepositoryMySQL) repository.TodoRepository {
+func NewMysqlTodoRepository(Conn *sql.DB) repository.TodoRepository {
 	return &todoRepositoryMysql{
-		db:       &sql.DB{},
-		activity: activity,
+		db: &sql.DB{},
 	}
 }
 
@@ -90,12 +88,13 @@ func (m *todoRepositoryMysql) GetTodoByID(id uint64) (res aggregate.Todos, err e
 	return
 }
 
-func (m *todoRepositoryMysql) CreateTodo(activitGroupID uint64, title string) error {
-	query := "INSERT INTO todos (activity_group_id, title, is_active, priority) VALUES(?, ?, 1, 'NONE')"
+func (m *todoRepositoryMysql) CreateTodo(activitGroupID int, title, priority string) error {
+	query := "INSERT INTO todos (activity_group_id, title, is_active, priority) VALUES(?, ?, 1, ?)"
 	_, err := m.db.Exec(
 		query,
 		activitGroupID,
 		title,
+		priority,
 	)
 	if err != nil {
 		return err

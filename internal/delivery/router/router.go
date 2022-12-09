@@ -7,14 +7,13 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func Router(route *echo.Echo, usecase usecase.ActivityUsecase) {
-	h := handler.NewHandler(usecase)
+func Router(route *echo.Echo, usecaseActivity usecase.ActivityUsecase, usecaseTodo usecase.TodoUsecase) {
+	h := handler.NewHandler(usecaseActivity, usecaseTodo)
 
 	v1 := route.Group("v1")
 	{
 		v1.GET("/list-todo", h.HandlerGetActivites)
-		v1.GET("", h.HandlerGetActivites)
-		// v1.GET("/id", h.HandlerGetActivitesByUUID)
+		v1.GET("", h.HandlerGetActivitesByID)
 		v1.POST("/createActivity", h.HandlerCreateActivity)
 		v1.PUT("/updateActivity", h.HandlerUpdateActivity)
 	}

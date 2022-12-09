@@ -6,7 +6,7 @@ import (
 
 type TodoDTO struct {
 	ID              uint64
-	ActivityGroupID uint64
+	ActivityGroupID int
 	Title           string
 	IsActive        int
 	Priority        string

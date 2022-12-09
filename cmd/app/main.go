@@ -61,9 +61,11 @@ func main() {
 	e.Use(middL.CORS)
 	ar := _activityRepo.NewMysqlActivityRepository(dbConn)
 	au := _activityUcase.NewActivityUsecase(ar)
-	_activityHttpDelivery.NewHandler(au)
+	tr := _activityRepo.NewMysqlTodoRepository(dbConn)
+	tu := _activityUcase.NewTodoUsecase(tr)
+	_activityHttpDelivery.NewHandler(au, tu)
 
-	routers.Router(e, au)
+	routers.Router(e, au, tu)
 
 	log.Fatal(e.Start(viper.GetString("server.address")))
 }

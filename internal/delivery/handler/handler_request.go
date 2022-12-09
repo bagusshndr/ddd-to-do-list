@@ -12,12 +12,15 @@ type ReqUpdateActivity struct {
 }
 
 type ReqCreateTodo struct {
-	Email string `json:"email" validate:"required"`
-	Title string `json:"title" validate:"required"`
+	ActivityGroupID int    `json:"activity_group_id" validate:"required"`
+	Title           string `json:"title" validate:"required"`
+	Priority        string `json:"priority" validate:"required"`
 }
 
 type ReqUpdateTodo struct {
-	ID    uint64 `json:"id" validate:"required"`
-	Email string `json:"email" validate:"required"`
-	Title string `json:"title" validate:"required"`
+	ID              uint64 `json:"id" validate:"required"`
+	ActivityGroupID int    `json:"activity_group_id" validate:"required"`
+	Title           string `json:"title" validate:"required"`
+	IsActive        int    `json:"is_active" validate:"required"`
+	Priority        string `json:"priority" validate:"required"`
 }

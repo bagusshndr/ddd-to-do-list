@@ -25,8 +25,8 @@ func (u *todoUsecase) GetTodoByID(id uint64) (aggregate.Todos, error) {
 	return activity, nil
 }
 
-func (u *todoUsecase) CreateTodo(activitGroupID uint64, titile string) error {
-	err := u.repo.CreateTodo(activitGroupID, titile)
+func (u *todoUsecase) CreateTodo(activitGroupID int, title, priority string) error {
+	err := u.repo.CreateTodo(activitGroupID, title, priority)
 	if err != nil {
 		return err
 	}

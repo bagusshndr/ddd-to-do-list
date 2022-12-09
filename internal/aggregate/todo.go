@@ -4,7 +4,7 @@ type Todos []*Todo
 
 type Todo struct {
 	ID         uint64
-	ActivityID uint64
+	ActivityID int
 	Activity   MapActivities
 	Title      string
 	IsActive   int
@@ -20,7 +20,7 @@ func NewTodo(activity MapActivities, title string, isActive int, priority string
 	}, nil
 }
 
-func RebuildTodos(id uint64, activity uint64, title string, isActive int, priority string) (*Todo, error) {
+func RebuildTodos(id uint64, activity int, title string, isActive int, priority string) (*Todo, error) {
 	return &Todo{
 		ID:         id,
 		ActivityID: activity,
