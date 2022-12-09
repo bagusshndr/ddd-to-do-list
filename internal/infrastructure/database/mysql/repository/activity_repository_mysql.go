@@ -94,6 +94,20 @@ func (m *activityRepositoryMySQL) CreateActivity(email, title string) error {
 	return nil
 }
 
+func (m *activityRepositoryMySQL) UpdateActivity(id uint64, email, title string) error {
+	query := "UPDATE activities email = ?, title = ? WHERE id = ?"
+	_, err := m.db.Exec(
+		query,
+		email,
+		title,
+		id,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *activityRepositoryMySQL) DeleteActivity(id uint64) error {
 	query := "DELETE activities WHERE id = ?"
 	_, err := s.db.Exec(

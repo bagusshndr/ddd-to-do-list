@@ -90,14 +90,28 @@ func (m *todoRepositoryMysql) GetTodoByID(id uint64) (res aggregate.Todos, err e
 	return
 }
 
-func (m *todoRepositoryMysql) CreateTodo(todo *aggregate.Todo) error {
-	query := "INSERT INTO todos (activity_group_id, title, is_active, priority) VALUES(?, ?, ?, ?)"
+func (m *todoRepositoryMysql) CreateTodo(activitGroupID uint64, title string) error {
+	query := "INSERT INTO todos (activity_group_id, title, is_active, priority) VALUES(?, ?, 1, 'NONE')"
 	_, err := m.db.Exec(
 		query,
-		todo.ActivityID,
-		todo.Title,
-		todo.IsActive,
-		todo.Priority,
+		activitGroupID,
+		title,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *todoRepositoryMysql) UpdateTodo(id, uint64, activity_group_id int, title string, is_active int, priority string) error {
+	query := "UPDATE todos SET activity_group_id = ?, title = ?, is_active = ?, priority = ? WHERE id = ?"
+	_, err := m.db.Exec(
+		query,
+		activity_group_id,
+		title,
+		is_active,
+		priority,
+		id,
 	)
 	if err != nil {
 		return err
