@@ -69,7 +69,7 @@ func (m *todoRepositoryMysql) fetch(query string, args ...interface{}) (aggregat
 }
 
 func (m *todoRepositoryMysql) GetTodo() (res aggregate.Todos, err error) {
-	query := `SELECT id, email, title FROM activities`
+	query := `SELECT id, activity_group_id, title, is_active, priority FROM todos`
 
 	res, err = m.fetch(query)
 	if err != nil {
@@ -80,7 +80,7 @@ func (m *todoRepositoryMysql) GetTodo() (res aggregate.Todos, err error) {
 }
 
 func (m *todoRepositoryMysql) GetTodoByID(id uint64) (res aggregate.Todos, err error) {
-	query := `SELECT id, email, title FROM activities WHERE id = ? LIMIT 1`
+	query := `SELECT id, activity_group_id, title, is_active, priority FROM todos WHERE id = ? LIMIT 1`
 
 	res, err = m.fetch(query, id)
 	if err != nil {
@@ -91,9 +91,13 @@ func (m *todoRepositoryMysql) GetTodoByID(id uint64) (res aggregate.Todos, err e
 }
 
 func (m *todoRepositoryMysql) CreateTodo(todo *aggregate.Todo) error {
-	query := "INSERT INTO activities (id, email, title) VALUES(?, ?, ?)"
+	query := "INSERT INTO todos (activity_group_id, title, is_active, priority) VALUES(?, ?, ?, ?)"
 	_, err := m.db.Exec(
 		query,
+		todo.ActivityID,
+		todo.Title,
+		todo.IsActive,
+		todo.Priority,
 	)
 	if err != nil {
 		return err
@@ -102,7 +106,7 @@ func (m *todoRepositoryMysql) CreateTodo(todo *aggregate.Todo) error {
 }
 
 func (s *todoRepositoryMysql) DeleteTodo(id uint64) error {
-	query := "DELETE activities WHERE id = ?"
+	query := "DELETE todos WHERE id = ?"
 	_, err := s.db.Exec(
 		query,
 		id,
@@ -110,6 +114,5 @@ func (s *todoRepositoryMysql) DeleteTodo(id uint64) error {
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
