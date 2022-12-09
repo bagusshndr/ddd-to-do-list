@@ -16,8 +16,8 @@ func (m *ActivityMock) GetActivity() (res aggregate.Activities, err error) {
 	return args.Get(0).(aggregate.Activities), args.Error(1)
 }
 
-func (m *ActivityMock) CreateActivity(email string) error {
-	args := m.Called(email)
+func (m *ActivityMock) CreateActivity(email, title string) error {
+	args := m.Called(email, title)
 
 	return args.Error(0)
 }

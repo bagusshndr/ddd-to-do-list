@@ -81,11 +81,12 @@ func (m *activityRepositoryMySQL) GetActivityByID(id uint64) (res aggregate.Acti
 	return
 }
 
-func (m *activityRepositoryMySQL) CreateActivity(email string) error {
-	query := "INSERT INTO activities (id, email, title) VALUES(?, ?, ?)"
+func (m *activityRepositoryMySQL) CreateActivity(email, title string) error {
+	query := "INSERT INTO activities (email, title) VALUES(?, ?)"
 	_, err := m.db.Exec(
 		query,
 		email,
+		title,
 	)
 	if err != nil {
 		return err

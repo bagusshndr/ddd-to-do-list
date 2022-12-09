@@ -31,7 +31,7 @@ func (h *handler) HandlerCreateActivity(res http.ResponseWriter, req *http.Reque
 	var body ReqCreateActivity
 	json.NewDecoder(req.Body).Decode(&body)
 
-	err := h.usecase.CreateActivity(body.Email)
+	err := h.usecase.CreateActivity(body.Email, body.Title)
 	if err != nil {
 		log.Println(err)
 

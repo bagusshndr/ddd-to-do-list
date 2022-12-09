@@ -17,8 +17,8 @@ func (u *activityUsecase) GetActivity() (aggregate.Activities, error) {
 	return activity, nil
 }
 
-func (u *activityUsecase) CreateActivity(email string) error {
-	err := u.repo.CreateActivity(email)
+func (u *activityUsecase) CreateActivity(email, titile string) error {
+	err := u.repo.CreateActivity(email, titile)
 	if err != nil {
 		return err
 	}

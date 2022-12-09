@@ -91,14 +91,14 @@ func (t *activityRepositoryMysqlTest) TestCreate() {
 		t.mock.ExpectExec("INSERT INTO activities").WithArgs(
 			activity.Email,
 		).WillReturnResult(sqlmock.NewResult(1, 1))
-		t.NoError(t.activityMYSQL.CreateActivity(activity.Email))
+		t.NoError(t.activityMYSQL.CreateActivity(activity.Email, activity.Title))
 	})
 
 	t.Run("failed created", func() {
 		t.mock.ExpectExec("INSERT INTO activities").WithArgs(
 			activity.Email,
 		).WillReturnError(errors.New(""))
-		t.Error(t.activityMYSQL.CreateActivity(activity.Email))
+		t.Error(t.activityMYSQL.CreateActivity(activity.Email, activity.Title))
 	})
 
 }
