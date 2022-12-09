@@ -17,6 +17,14 @@ func (u *activityUsecase) GetActivity() (aggregate.Activities, error) {
 	return activity, nil
 }
 
+func (u *activityUsecase) CreateActivity(email string) error {
+	err := u.repo.CreateActivity(email)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func NewActivityUsecase(repo repository.ActivityRepository) ActivityUsecase {
 	return &activityUsecase{
 		repo: repo,
