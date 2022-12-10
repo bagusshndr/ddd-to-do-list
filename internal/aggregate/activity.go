@@ -31,3 +31,13 @@ func RebuildActivity(id uint64, email, title string) *Activity {
 		Title: title,
 	}
 }
+
+func RebuildActivities(id uint64, email, title string) *Activities {
+	return &Activities{
+		&Activity{
+			ID:    id,
+			Email: email,
+			Title: title,
+		},
+	}
+}
