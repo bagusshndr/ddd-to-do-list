@@ -5,10 +5,10 @@ import (
 )
 
 type Response struct {
-	Status       bool        `json:"status"`
-	Code         int         `json:"code"`
+	Status       string      `json:"status"`
+	Code         int         `json:"-"`
 	Message      string      `json:"message"`
-	ErrorMessage interface{} `json:"error_message"`
+	ErrorMessage interface{} `json:"-"`
 	Data         interface{} `json:"data"`
 }
 
@@ -16,7 +16,7 @@ func (r *Response) JSON(c echo.Context) error {
 	return c.JSON(r.Code, r)
 }
 
-func NewResponse(status bool, code int, message string, errorMessage, data interface{}) *Response {
+func NewResponse(status string, code int, message string, errorMessage, data interface{}) *Response {
 	return &Response{
 		Status:       status,
 		Code:         code,

@@ -9,9 +9,12 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 
 	_activityHttpDelivery "ddd-to-do-list/internal/delivery/handler"
 	routers "ddd-to-do-list/internal/delivery/router"
+	"ddd-to-do-list/internal/infrastructure/database/mysql/model"
 	_activityRepo "ddd-to-do-list/internal/infrastructure/database/mysql/repository"
 	_activityUcase "ddd-to-do-list/internal/usecase"
 )
@@ -47,6 +50,13 @@ func main() {
 			log.Fatal(err)
 		}
 	}()
+
+	ds := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dbPass, dbHost, dbPort, dbName)
+	db, err := gorm.Open(mysql.Open(ds), &gorm.Config{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	db.AutoMigrate(&model.ActivityDTO{}, &model.TodoDTO{})
 
 	e := echo.New()
 	middL := _activityHttpDelivery.InitMiddleware()

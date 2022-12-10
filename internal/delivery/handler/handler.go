@@ -3,6 +3,7 @@ package handler
 import (
 	"ddd-to-do-list/internal/shared"
 	"ddd-to-do-list/internal/usecase"
+	"fmt"
 	"log"
 	"strconv"
 
@@ -19,9 +20,9 @@ func (h *handler) HandlerGetActivites(c echo.Context) error {
 	if err != nil {
 		log.Println(err)
 
-		return shared.NewResponse(false, 400, "failed", nil, nil).JSON(c)
+		return shared.NewResponse("Failed", 400, "Failed", nil, nil).JSON(c)
 	}
-	return shared.NewResponse(true, 200, "success", nil, ActivityResponse{}.Response(activities)).JSON(c)
+	return shared.NewResponse("Success", 200, "Success", nil, ActivityResponse{}.Responses(activities)).JSON(c)
 }
 
 func (h *handler) HandlerGetTodos(c echo.Context) error {
@@ -29,9 +30,9 @@ func (h *handler) HandlerGetTodos(c echo.Context) error {
 	if err != nil {
 		log.Println(err)
 
-		return shared.NewResponse(false, 400, "failed", nil, nil).JSON(c)
+		return shared.NewResponse("Failed", 400, "Failed", nil, nil).JSON(c)
 	}
-	return shared.NewResponse(true, 200, "success", nil, TodoResponse{}.Response(todos)).JSON(c)
+	return shared.NewResponse("Success", 200, "Success", nil, TodoResponse{}.Response(todos)).JSON(c)
 }
 
 func (h *handler) HandlerGetActivitesByID(c echo.Context) error {
@@ -40,9 +41,10 @@ func (h *handler) HandlerGetActivitesByID(c echo.Context) error {
 	activities, err := h.usecaseActivity.GetActivityByID(body.ID)
 	if err != nil {
 		log.Println(err)
-		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
+		id := fmt.Sprintf("Activity with ID %d Not Found", body.ID)
+		return shared.NewResponse("Not Found", 400, id, err.Error(), nil).JSON(c)
 	}
-	return shared.NewResponse(true, 200, "success", nil, ActivityResponse{}.Response(activities)).JSON(c)
+	return shared.NewResponse("Success", 200, "success", nil, ActivityResponse{}.Response(activities)).JSON(c)
 }
 
 func (h *handler) HandlerGetTodosByID(c echo.Context) error {
@@ -51,9 +53,9 @@ func (h *handler) HandlerGetTodosByID(c echo.Context) error {
 	todos, err := h.usecaseTodo.GetTodoByID(body.ID)
 	if err != nil {
 		log.Println(err)
-		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
+		return shared.NewResponse("Failed", 400, "Failed", err.Error(), nil).JSON(c)
 	}
-	return shared.NewResponse(true, 200, "success", TodoResponse{}.Response(todos), nil).JSON(c)
+	return shared.NewResponse("Success", 200, "success", TodoResponse{}.Response(todos), nil).JSON(c)
 }
 
 func (h *handler) HandlerCreateActivity(c echo.Context) error {
@@ -63,23 +65,23 @@ func (h *handler) HandlerCreateActivity(c echo.Context) error {
 	if err != nil {
 		log.Println(err)
 
-		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
+		return shared.NewResponse("Failed", 400, "Failed", err.Error(), nil).JSON(c)
 	}
-	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
+	return shared.NewResponse("Success", 200, "Success", nil, ActivityResponse{}.CreateResponse(body.Email, body.Title)).JSON(c)
 }
 
 func (h *handler) HandlerCreateTodo(c echo.Context) error {
-	var body ReqCreateTodos
+	var body ReqCreateTodo
 	c.Bind(&body)
-	for _, reqCreateTodo := range body {
-		err := h.usecaseTodo.CreateTodo(reqCreateTodo.ActivityGroupID, reqCreateTodo.Title, reqCreateTodo.Priority)
-		if err != nil {
-			log.Println(err)
 
-			return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
-		}
+	err := h.usecaseTodo.CreateTodo(body.ActivityGroupID, body.Title, body.Priority)
+	if err != nil {
+		log.Println(err)
+
+		return shared.NewResponse("Failed", 400, "Failed", err.Error(), nil).JSON(c)
 	}
-	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
+
+	return shared.NewResponse("Success", 200, "Success", nil, nil).JSON(c)
 }
 
 func (h *handler) HandlerUpdateActivity(c echo.Context) error {
@@ -89,9 +91,9 @@ func (h *handler) HandlerUpdateActivity(c echo.Context) error {
 	if err != nil {
 		log.Println(err)
 
-		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
+		return shared.NewResponse("Failed", 400, "Failed", err.Error(), nil).JSON(c)
 	}
-	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
+	return shared.NewResponse("Success", 200, "success", nil, nil).JSON(c)
 }
 
 func (h *handler) HandlerUpdateTodo(c echo.Context) error {
@@ -101,9 +103,9 @@ func (h *handler) HandlerUpdateTodo(c echo.Context) error {
 	if err != nil {
 		log.Println(err)
 
-		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
+		return shared.NewResponse("Failed", 400, "Failed", err.Error(), nil).JSON(c)
 	}
-	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
+	return shared.NewResponse("Success", 200, "success", nil, nil).JSON(c)
 }
 
 func (h *handler) HandlerDeleteActivity(c echo.Context) error {
@@ -112,9 +114,9 @@ func (h *handler) HandlerDeleteActivity(c echo.Context) error {
 	err := h.usecaseActivity.DeleteActivity(uintID)
 	if err != nil {
 		log.Println(err)
-		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
+		return shared.NewResponse("Failed", 400, "Failed", err.Error(), nil).JSON(c)
 	}
-	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
+	return shared.NewResponse("Success", 200, "success", nil, nil).JSON(c)
 }
 
 func (h *handler) HandlerDeleteTodo(c echo.Context) error {
@@ -123,9 +125,9 @@ func (h *handler) HandlerDeleteTodo(c echo.Context) error {
 	err := h.usecaseTodo.DeleteTodo(uintID)
 	if err != nil {
 		log.Println(err)
-		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
+		return shared.NewResponse("Failed", 400, "Failed", err.Error(), nil).JSON(c)
 	}
-	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
+	return shared.NewResponse("Success", 200, "success", nil, nil).JSON(c)
 }
 
 func NewHandler(usecaseActivity usecase.ActivityUsecase, usecaseTodo usecase.TodoUsecase) *handler {

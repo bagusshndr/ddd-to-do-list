@@ -1,14 +1,20 @@
 package aggregate
 
-import "errors"
+import (
+	"errors"
+	"time"
+)
 
 type Activities []*Activity
 type MapActivities map[uint64]Activity
 
 type Activity struct {
-	ID    uint64
-	Email string
-	Title string
+	ID        uint64
+	Email     string
+	Title     string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt time.Time
 }
 
 func NewActivity(email, title string) (*Activity, error) {

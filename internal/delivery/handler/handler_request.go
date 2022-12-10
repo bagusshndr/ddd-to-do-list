@@ -7,8 +7,8 @@ type ReqGetID struct {
 }
 
 type ReqCreateActivity struct {
-	Email string `json:"email" validate:"required"`
 	Title string `json:"title" validate:"required"`
+	Email string `json:"email" validate:"required"`
 }
 
 type ReqUpdateActivity struct {

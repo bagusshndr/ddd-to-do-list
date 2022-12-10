@@ -12,16 +12,19 @@ func Router(route *echo.Echo, usecaseActivity usecase.ActivityUsecase, usecaseTo
 
 	v1 := route.Group("v1")
 	{
-		v1.GET("/getAllActivity", h.HandlerGetActivites)
-		v1.GET("/getAllTodo", h.HandlerGetTodos)
-		v1.GET("/getActivityByID", h.HandlerGetActivitesByID)
-		v1.GET("/getTodoByID", h.HandlerGetTodosByID)
-		v1.POST("/createActivity", h.HandlerCreateActivity)
-		v1.POST("/createTodo", h.HandlerCreateTodo)
-		v1.PUT("/updateActivity", h.HandlerUpdateActivity)
-		v1.PUT("/updateTodo", h.HandlerUpdateTodo)
-		v1.DELETE("/deleteActivity", h.HandlerDeleteActivity)
-		v1.PUT("/deleteTodo", h.HandlerDeleteTodo)
+		// ActivityHandler
+		v1.GET("/activity-groups", h.HandlerGetActivites)
+		v1.GET("/activity-groups/{id}", h.HandlerGetActivitesByID)
+		v1.POST("/activity-groups", h.HandlerCreateActivity)
+		v1.PUT("/activity-groups", h.HandlerUpdateActivity)
+		v1.DELETE("/activity-groups", h.HandlerDeleteActivity)
+
+		// THandler
+		v1.GET("/todo-items", h.HandlerGetTodos)
+		v1.GET("/todo-items", h.HandlerGetTodosByID)
+		v1.POST("/todo-items", h.HandlerCreateTodo)
+		v1.PUT("/todo-items", h.HandlerUpdateTodo)
+		v1.PUT("/todo-items", h.HandlerDeleteTodo)
 	}
 
 }
