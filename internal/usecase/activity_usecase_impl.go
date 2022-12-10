@@ -42,6 +42,15 @@ func (u *activityUsecase) UpdateActivity(id uint64, email, title string) error {
 	return nil
 }
 
+func (u *activityUsecase) DeleteActivity(id uint64) error {
+	err := u.repo.DeleteActivity(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func NewActivityUsecase(repo repository.ActivityRepository) ActivityUsecase {
 	return &activityUsecase{
 		repo: repo,

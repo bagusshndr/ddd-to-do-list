@@ -7,4 +7,5 @@ type ActivityUsecase interface {
 	GetActivityByID(id uint64) (aggregate.Activities, error)
 	CreateActivity(email, titile string) error
 	UpdateActivity(id uint64, email, title string) error
+	DeleteActivity(id uint64) error
 }

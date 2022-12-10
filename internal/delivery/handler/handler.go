@@ -35,20 +35,20 @@ func (h *handler) HandlerGetTodos(c echo.Context) error {
 }
 
 func (h *handler) HandlerGetActivitesByID(c echo.Context) error {
-	id := c.QueryParam("id")
-	uintID, _ := strconv.ParseUint(id, 10, 64)
-	activities, err := h.usecaseActivity.GetActivityByID(uintID)
+	var body ReqGetID
+	c.Bind(&body)
+	activities, err := h.usecaseActivity.GetActivityByID(body.ID)
 	if err != nil {
 		log.Println(err)
 		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
 	}
-	return shared.NewResponse(true, 200, "success", ActivityResponse{}.Response(activities), nil).JSON(c)
+	return shared.NewResponse(true, 200, "success", nil, ActivityResponse{}.Response(activities)).JSON(c)
 }
 
 func (h *handler) HandlerGetTodosByID(c echo.Context) error {
-	id := c.QueryParam("id")
-	uintID, _ := strconv.ParseUint(id, 10, 64)
-	todos, err := h.usecaseTodo.GetTodoByID(uintID)
+	var body ReqGetID
+	c.Bind(&body)
+	todos, err := h.usecaseTodo.GetTodoByID(body.ID)
 	if err != nil {
 		log.Println(err)
 		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
@@ -79,7 +79,6 @@ func (h *handler) HandlerCreateTodo(c echo.Context) error {
 			return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
 		}
 	}
-
 	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
 }
 
@@ -102,6 +101,28 @@ func (h *handler) HandlerUpdateTodo(c echo.Context) error {
 	if err != nil {
 		log.Println(err)
 
+		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
+	}
+	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
+}
+
+func (h *handler) HandlerDeleteActivity(c echo.Context) error {
+	id := c.QueryParam("id")
+	uintID, _ := strconv.ParseUint(id, 10, 64)
+	err := h.usecaseActivity.DeleteActivity(uintID)
+	if err != nil {
+		log.Println(err)
+		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
+	}
+	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)
+}
+
+func (h *handler) HandlerDeleteTodo(c echo.Context) error {
+	id := c.QueryParam("id")
+	uintID, _ := strconv.ParseUint(id, 10, 64)
+	err := h.usecaseTodo.DeleteTodo(uintID)
+	if err != nil {
+		log.Println(err)
 		return shared.NewResponse(false, 400, "failed", err.Error(), nil).JSON(c)
 	}
 	return shared.NewResponse(true, 200, "success", nil, nil).JSON(c)

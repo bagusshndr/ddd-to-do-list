@@ -42,6 +42,15 @@ func (u *todoUsecase) UpdateTodo(id uint64, activitGroupID, IsActive int, title,
 	return nil
 }
 
+func (u *todoUsecase) DeleteTodo(id uint64) error {
+	err := u.repo.DeleteTodo(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func NewTodoUsecase(repo repository.TodoRepository) TodoUsecase {
 	return &todoUsecase{
 		repo: repo,

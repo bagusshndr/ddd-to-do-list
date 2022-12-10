@@ -2,6 +2,10 @@ package handler
 
 type ReqCreateTodos []ReqCreateTodo
 
+type ReqGetID struct {
+	ID uint64 `json:"id" validate:"required"`
+}
+
 type ReqCreateActivity struct {
 	Email string `json:"email" validate:"required"`
 	Title string `json:"title" validate:"required"`

@@ -33,3 +33,9 @@ func (m *ActivityMock) UpdateActivity(id uint64, email, title string) error {
 
 	return args.Error(0)
 }
+
+func (m *ActivityMock) DeleteActivity(id uint64) error {
+	args := m.Called(id)
+
+	return args.Error(0)
+}

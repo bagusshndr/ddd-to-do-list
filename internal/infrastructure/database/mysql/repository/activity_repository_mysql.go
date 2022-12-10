@@ -95,7 +95,7 @@ func (m *activityRepositoryMySQL) CreateActivity(email, title string) error {
 }
 
 func (m *activityRepositoryMySQL) UpdateActivity(id uint64, email, title string) error {
-	query := "UPDATE activities email = ?, title = ? WHERE id = ?"
+	query := "UPDATE activities SET email = ?, title = ? WHERE id = ?"
 	_, err := m.db.Exec(
 		query,
 		email,
