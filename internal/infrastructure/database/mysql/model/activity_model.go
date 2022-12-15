@@ -7,8 +7,8 @@ import (
 
 type ActivityDTO struct {
 	ID        uint64    `gorm:"id"`
-	Email     string    `gorm:"email"`
 	Title     string    `gorm:"title"`
+	Email     string    `gorm:"email"`
 	CreatedAt time.Time `gorm:"created_at"`
 	UpdatedAt time.Time `gorm:"updated_at"`
 }

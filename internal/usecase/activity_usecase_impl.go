@@ -25,12 +25,12 @@ func (u *activityUsecase) GetActivityByID(id uint64) (aggregate.Activities, erro
 	return activity, nil
 }
 
-func (u *activityUsecase) CreateActivity(email, titile string) error {
-	err := u.repo.CreateActivity(email, titile)
+func (u *activityUsecase) CreateActivity(email, titile string) (uint64, error) {
+	uid, err := u.repo.CreateActivity(email, titile)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+	return uid, nil
 }
 
 func (u *activityUsecase) UpdateActivity(id uint64, email, title string) error {

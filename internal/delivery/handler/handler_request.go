@@ -12,7 +12,6 @@ type ReqCreateActivity struct {
 }
 
 type ReqUpdateActivity struct {
-	ID    uint64 `json:"id" validate:"required"`
 	Email string `json:"email" validate:"required"`
 	Title string `json:"title" validate:"required"`
 }

@@ -32,42 +32,41 @@ func (h *handler) HandlerGetTodos(c echo.Context) error {
 
 		return shared.NewResponse("Failed", 400, "Failed", nil, nil).JSON(c)
 	}
-	return shared.NewResponse("Success", 200, "Success", nil, TodoResponse{}.Response(todos)).JSON(c)
+	return shared.NewResponse("Success", 200, "Success", nil, TodoResponse{}.Responses(todos)).JSON(c)
 }
 
 func (h *handler) HandlerGetActivitesByID(c echo.Context) error {
-	var body ReqGetID
-	c.Bind(&body)
-	activities, err := h.usecaseActivity.GetActivityByID(body.ID)
+	id := c.Param("id")
+	uid, _ := strconv.ParseUint(id, 10, 32)
+	activities, err := h.usecaseActivity.GetActivityByID(uid)
 	if err != nil {
-		log.Println(err)
-		id := fmt.Sprintf("Activity with ID %d Not Found", body.ID)
+		id := fmt.Sprintf("Activity with ID %d Not Found", uid)
 		return shared.NewResponse("Not Found", 400, id, err.Error(), nil).JSON(c)
 	}
 	return shared.NewResponse("Success", 200, "success", nil, ActivityResponse{}.Response(activities)).JSON(c)
 }
 
 func (h *handler) HandlerGetTodosByID(c echo.Context) error {
-	var body ReqGetID
-	c.Bind(&body)
-	todos, err := h.usecaseTodo.GetTodoByID(body.ID)
+	id := c.Param("id")
+	uid, _ := strconv.ParseUint(id, 10, 32)
+	todos, err := h.usecaseTodo.GetTodoByID(uid)
 	if err != nil {
-		log.Println(err)
-		return shared.NewResponse("Failed", 400, "Failed", err.Error(), nil).JSON(c)
+		id := fmt.Sprintf("Activity with ID %d Not Found", uid)
+		return shared.NewResponse("Not Found", 400, id, err.Error(), nil).JSON(c)
 	}
-	return shared.NewResponse("Success", 200, "success", TodoResponse{}.Response(todos), nil).JSON(c)
+	return shared.NewResponse("Success", 200, "success", nil, TodoResponse{}.Response(todos)).JSON(c)
 }
 
 func (h *handler) HandlerCreateActivity(c echo.Context) error {
 	var body ReqCreateActivity
 	c.Bind(&body)
-	err := h.usecaseActivity.CreateActivity(body.Email, body.Title)
+	id, err := h.usecaseActivity.CreateActivity(body.Email, body.Title)
 	if err != nil {
 		log.Println(err)
 
 		return shared.NewResponse("Failed", 400, "Failed", err.Error(), nil).JSON(c)
 	}
-	return shared.NewResponse("Success", 200, "Success", nil, ActivityResponse{}.CreateResponse(body.Email, body.Title)).JSON(c)
+	return shared.NewResponse("Success", 200, "Success", nil, ActivityResponse{}.CreateResponse(id, body.Email, body.Title)).JSON(c)
 }
 
 func (h *handler) HandlerCreateTodo(c echo.Context) error {
@@ -87,13 +86,15 @@ func (h *handler) HandlerCreateTodo(c echo.Context) error {
 func (h *handler) HandlerUpdateActivity(c echo.Context) error {
 	var body ReqUpdateActivity
 	c.Bind(&body)
-	err := h.usecaseActivity.UpdateActivity(body.ID, body.Email, body.Title)
+	id := c.Param("id")
+	uid, _ := strconv.ParseUint(id, 10, 32)
+	err := h.usecaseActivity.UpdateActivity(uid, body.Email, body.Title)
 	if err != nil {
 		log.Println(err)
 
 		return shared.NewResponse("Failed", 400, "Failed", err.Error(), nil).JSON(c)
 	}
-	return shared.NewResponse("Success", 200, "success", nil, nil).JSON(c)
+	return shared.NewResponse("Success", 200, "success", nil, ActivityResponse{}.CreateResponse(uid, body.Email, body.Title)).JSON(c)
 }
 
 func (h *handler) HandlerUpdateTodo(c echo.Context) error {
@@ -109,7 +110,7 @@ func (h *handler) HandlerUpdateTodo(c echo.Context) error {
 }
 
 func (h *handler) HandlerDeleteActivity(c echo.Context) error {
-	id := c.QueryParam("id")
+	id := c.Param("id")
 	uintID, _ := strconv.ParseUint(id, 10, 64)
 	err := h.usecaseActivity.DeleteActivity(uintID)
 	if err != nil {

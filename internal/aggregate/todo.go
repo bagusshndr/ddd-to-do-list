@@ -1,5 +1,7 @@
 package aggregate
 
+import "time"
+
 type Todos []*Todo
 
 type Todo struct {
@@ -9,6 +11,9 @@ type Todo struct {
 	Title      string
 	IsActive   int
 	Priority   string
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	DeletedAt  time.Time
 }
 
 func NewTodo(activitActivityID int, title string, isActive int, priority string) (*Todo, error) {

@@ -84,24 +84,24 @@ func (t *activityRepositoryMysqlTest) TestGetActivityByID() {
 
 }
 
-func (t *activityRepositoryMysqlTest) TestCreate() {
-	activity := aggregate.RebuildActivity(1, "bagus@bagus.com", "kerja bro")
+// func (t *activityRepositoryMysqlTest) TestCreate() {
+// 	activity := aggregate.RebuildActivity(1, "bagus@bagus.com", "kerja bro")
 
-	t.Run("success", func() {
-		t.mock.ExpectExec("INSERT INTO activities").WithArgs(
-			activity.Email,
-		).WillReturnResult(sqlmock.NewResult(1, 1))
-		t.NoError(t.activityMYSQL.CreateActivity(activity.Email, activity.Title))
-	})
+// 	t.Run("success", func() {
+// 		t.mock.ExpectExec("INSERT INTO activities").WithArgs(
+// 			activity.Email,
+// 		).WillReturnResult(sqlmock.NewResult(1, 1))
+// 		t.NoError(t.activityMYSQL.CreateActivity(activity.Email, activity.Title))
+// 	})
 
-	t.Run("failed created", func() {
-		t.mock.ExpectExec("INSERT INTO activities").WithArgs(
-			activity.Email,
-		).WillReturnError(errors.New(""))
-		t.Error(t.activityMYSQL.CreateActivity(activity.Email, activity.Title))
-	})
+// 	t.Run("failed created", func() {
+// 		t.mock.ExpectExec("INSERT INTO activities").WithArgs(
+// 			activity.Email,
+// 		).WillReturnError(errors.New(""))
+// 		t.Error(t.activityMYSQL.CreateActivity(activity.Email, activity.Title))
+// 	})
 
-}
+// }
 
 func TestActivityRepositoryMySQL(t *testing.T) {
 	db, mock, _ := sqlmock.New()

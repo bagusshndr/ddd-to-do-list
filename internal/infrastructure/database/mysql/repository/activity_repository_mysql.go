@@ -81,17 +81,24 @@ func (m *activityRepositoryMySQL) GetActivityByID(id uint64) (res aggregate.Acti
 	return
 }
 
-func (m *activityRepositoryMySQL) CreateActivity(email, title string) error {
-	query := "INSERT INTO activities (email, title) VALUES(?, ?)"
-	_, err := m.db.Exec(
+func (m *activityRepositoryMySQL) CreateActivity(email, title string) (uint64, error) {
+	query := "INSERT INTO activities (email, title, created_at) VALUES(?, ?, CURRENT_TIMESTAMP())"
+	res, err := m.db.Exec(
 		query,
 		email,
 		title,
 	)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	uId := uint64(id)
+
+	return uId, nil
 }
 
 func (m *activityRepositoryMySQL) UpdateActivity(id uint64, email, title string) error {

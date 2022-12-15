@@ -6,8 +6,8 @@ import (
 
 type TodoDTO struct {
 	ID              uint64    `gorm:"id"`
-	ActivityGroupID int       `gorm:"activity_group_id"`
 	Title           string    `gorm:"title"`
+	ActivityGroupID int       `gorm:"activity_group_id"`
 	IsActive        int       `gorm:"is_active"`
 	Priority        string    `gorm:"priority"`
 	CreatedAt       time.Time `gorm:"created_at"`

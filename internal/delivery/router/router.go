@@ -14,14 +14,14 @@ func Router(route *echo.Echo, usecaseActivity usecase.ActivityUsecase, usecaseTo
 	{
 		// ActivityHandler
 		v1.GET("/activity-groups", h.HandlerGetActivites)
-		v1.GET("/activity-groups/{id}", h.HandlerGetActivitesByID)
+		v1.GET("/activity-groups/:id", h.HandlerGetActivitesByID)
 		v1.POST("/activity-groups", h.HandlerCreateActivity)
-		v1.PUT("/activity-groups", h.HandlerUpdateActivity)
-		v1.DELETE("/activity-groups", h.HandlerDeleteActivity)
+		v1.PUT("/activity-groups/:id", h.HandlerUpdateActivity)
+		v1.DELETE("/activity-groups/:id", h.HandlerDeleteActivity)
 
 		// THandler
 		v1.GET("/todo-items", h.HandlerGetTodos)
-		v1.GET("/todo-items", h.HandlerGetTodosByID)
+		v1.GET("/todo-items/:id", h.HandlerGetTodosByID)
 		v1.POST("/todo-items", h.HandlerCreateTodo)
 		v1.PUT("/todo-items", h.HandlerUpdateTodo)
 		v1.PUT("/todo-items", h.HandlerDeleteTodo)
