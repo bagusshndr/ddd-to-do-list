@@ -23,7 +23,6 @@ type ReqCreateTodo struct {
 }
 
 type ReqUpdateTodo struct {
-	ID              uint64 `json:"id" validate:"required"`
 	ActivityGroupID int    `json:"activity_group_id" validate:"required"`
 	Title           string `json:"title" validate:"required"`
 	IsActive        int    `json:"is_active" validate:"required"`

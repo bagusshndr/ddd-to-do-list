@@ -10,7 +10,7 @@ import (
 func Router(route *echo.Echo, usecaseActivity usecase.ActivityUsecase, usecaseTodo usecase.TodoUsecase) {
 	h := handler.NewHandler(usecaseActivity, usecaseTodo)
 
-	v1 := route.Group("v1")
+	v1 := route.Group("")
 	{
 		// ActivityHandler
 		v1.GET("/activity-groups", h.HandlerGetActivites)
@@ -23,8 +23,8 @@ func Router(route *echo.Echo, usecaseActivity usecase.ActivityUsecase, usecaseTo
 		v1.GET("/todo-items", h.HandlerGetTodos)
 		v1.GET("/todo-items/:id", h.HandlerGetTodosByID)
 		v1.POST("/todo-items", h.HandlerCreateTodo)
-		v1.PUT("/todo-items", h.HandlerUpdateTodo)
-		v1.PUT("/todo-items", h.HandlerDeleteTodo)
+		v1.PUT("/todo-items/:id", h.HandlerUpdateTodo)
+		v1.DELETE("/todo-items/:id", h.HandlerDeleteTodo)
 	}
 
 }

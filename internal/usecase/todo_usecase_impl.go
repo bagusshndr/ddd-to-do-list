@@ -3,6 +3,7 @@ package usecase
 import (
 	"ddd-to-do-list/internal/aggregate"
 	"ddd-to-do-list/internal/repository"
+	"errors"
 )
 
 type todoUsecase struct {
@@ -18,19 +19,22 @@ func (u *todoUsecase) GetTodo() (aggregate.Todos, error) {
 }
 
 func (u *todoUsecase) GetTodoByID(id uint64) (aggregate.Todos, error) {
-	activity, err := u.repo.GetTodoByID(id)
+	todo, err := u.repo.GetTodoByID(id)
+	if len(todo) <= 0 {
+		return nil, errors.New("data not found")
+	}
 	if err != nil {
 		return nil, err
 	}
-	return activity, nil
+	return todo, nil
 }
 
-func (u *todoUsecase) CreateTodo(activitGroupID int, title, priority string) error {
-	err := u.repo.CreateTodo(activitGroupID, title, priority)
+func (u *todoUsecase) CreateTodo(activitGroupID int, title, priority string) (uint64, error) {
+	id, err := u.repo.CreateTodo(activitGroupID, title, priority)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+	return id, nil
 }
 
 func (u *todoUsecase) UpdateTodo(id uint64, activitGroupID, IsActive int, title, priority string) error {

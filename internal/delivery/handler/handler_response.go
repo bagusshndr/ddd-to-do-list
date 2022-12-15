@@ -17,14 +17,17 @@ type ActivityResponse struct {
 	Title     string    `json:"title"`
 }
 
+type FailedActivityResponse struct {
+}
+
 type TodoResponse struct {
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
 	ID              uint64    `json:"id"`
-	ActivityGroupID int       `json:"activity_group_id" validate:"required"`
-	Title           string    `json:"title" validate:"required"`
-	IsActive        int       `json:"is_active" validate:"required"`
-	Priority        string    `json:"priority" validate:"required"`
+	ActivityGroupID int       `json:"activity_group_id"`
+	Title           string    `json:"title"`
+	IsActive        int       `json:"is_active"`
+	Priority        string    `json:"priority"`
 }
 
 func (response ActivityResponse) Responses(activity aggregate.Activities) (result ActivityResponses) {
@@ -114,5 +117,17 @@ func (response TodoResponse) Response(todo aggregate.Todos) TodoResponse {
 		Title:           response.Title,
 		IsActive:        response.IsActive,
 		Priority:        response.Priority,
+	}
+}
+
+func (response TodoResponse) CreateResponse(id uint64, activityId int, title, priority string) TodoResponse {
+	return TodoResponse{
+		CreatedAt:       time.Now(),
+		UpdatedAt:       time.Now(),
+		ID:              id,
+		ActivityGroupID: activityId,
+		Title:           title,
+		IsActive:        1,
+		Priority:        priority,
 	}
 }

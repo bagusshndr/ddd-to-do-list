@@ -116,11 +116,12 @@ func (m *activityRepositoryMySQL) UpdateActivity(id uint64, email, title string)
 }
 
 func (s *activityRepositoryMySQL) DeleteActivity(id uint64) error {
-	query := "DELETE activities WHERE id = ?"
+	query := "DELETE FROM activities WHERE id = ?"
 	_, err := s.db.Exec(
 		query,
 		id,
 	)
+
 	if err != nil {
 		return err
 	}

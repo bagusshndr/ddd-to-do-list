@@ -88,18 +88,23 @@ func (m *todoRepositoryMysql) GetTodoByID(id uint64) (res aggregate.Todos, err e
 	return
 }
 
-func (m *todoRepositoryMysql) CreateTodo(activitGroupID int, title, priority string) error {
+func (m *todoRepositoryMysql) CreateTodo(activitGroupID int, title, priority string) (uint64, error) {
 	query := "INSERT INTO todos (activity_group_id, title, is_active, priority) VALUES(?, ?, 1, ?)"
-	_, err := m.db.Exec(
+	res, err := m.db.Exec(
 		query,
 		activitGroupID,
 		title,
 		priority,
 	)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	uId := uint64(id)
+	return uId, nil
 }
 
 func (m *todoRepositoryMysql) UpdateTodo(id uint64, activitGroupID, IsActive int, title, priority string) error {
@@ -119,11 +124,14 @@ func (m *todoRepositoryMysql) UpdateTodo(id uint64, activitGroupID, IsActive int
 }
 
 func (s *todoRepositoryMysql) DeleteTodo(id uint64) error {
-	query := "UPDATE todos SET is_active = 0 WHERE id = ?"
-	_, err := s.db.Exec(
+	query := "DELETE FROM todos WHERE id = ?"
+	res, err := s.db.Exec(
 		query,
 		id,
 	)
+	if res == nil {
+		return err
+	}
 	if err != nil {
 		return err
 	}
