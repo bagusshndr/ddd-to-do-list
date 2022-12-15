@@ -1,6 +1,14 @@
 # ddd-to-do-list
 
 
+
+Pull docker 
+docker pull bagusshndr/ddd-todo-list:1.0
+
+Run docker CLI
+docker run --publish bagusshndr/ddd-todo-list:1.0
+
+
 Curl API
 
 <!-- Get Activity -->
@@ -48,4 +56,4 @@ curl --location --request PUT 'http://127.0.0.1:3030/todo-items/2' \
     "priority" : "low"
 }'
 <!-- Delete Todo -->
-curl --location --request PUT 'http://127.0.0.1:3030/todo-items/1'
+curl --location --request DELETE 'http://127.0.0.1:3030/todo-items/1'
