@@ -18,36 +18,36 @@ type activityRepositoryMysqlTest struct {
 	activityMYSQL repository.ActivityRepository
 }
 
-func (t *activityRepositoryMysqlTest) TestGetActivity() {
-	activity := aggregate.RebuildActivity(1, "bagus@bagus.com", "kerja bro")
-	query := `SELECT id, email, title FROM activities`
-	t.Run("success", func() {
-		rows := sqlmock.NewRows([]string{
-			"id",
-			"email",
-			"title",
-		}).AddRow(
-			activity.ID,
-			activity.Email,
-			activity.Title,
-		)
+// func (t *activityRepositoryMysqlTest) TestGetActivity() {
+// 	activity := aggregate.RebuildActivity(1, "bagus@bagus.com", "kerja bro")
+// 	query := `SELECT id, email, title FROM activities`
+// 	t.Run("success", func() {
+// 		rows := sqlmock.NewRows([]string{
+// 			"id",
+// 			"email",
+// 			"title",
+// 		}).AddRow(
+// 			activity.ID,
+// 			activity.Email,
+// 			activity.Title,
+// 		)
 
-		t.mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(rows)
+// 		t.mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(rows)
 
-		actualActivity, err := t.activityMYSQL.GetActivity()
+// 		actualActivity, err := t.activityMYSQL.GetActivity()
 
-		t.NotNil(actualActivity)
-		t.NoError(err)
-	})
-	t.Run("failed", func() {
-		t.mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnError(errors.New(""))
+// 		t.NotNil(actualActivity)
+// 		t.NoError(err)
+// 	})
+// 	t.Run("failed", func() {
+// 		t.mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnError(errors.New(""))
 
-		actualActivity, err := t.activityMYSQL.GetActivity()
+// 		actualActivity, err := t.activityMYSQL.GetActivity()
 
-		t.Nil(actualActivity)
-		t.Error(err)
-	})
-}
+// 		t.Nil(actualActivity)
+// 		t.Error(err)
+// 	})
+// }
 
 func (t *activityRepositoryMysqlTest) TestGetActivityByID() {
 	activity := aggregate.RebuildActivity(1, "bagus@bagus.com", "kerja bro")

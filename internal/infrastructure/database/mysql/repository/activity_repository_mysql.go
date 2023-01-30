@@ -6,6 +6,7 @@ import (
 	"ddd-to-do-list/internal/infrastructure/database/mysql/model"
 	"ddd-to-do-list/internal/repository"
 	"errors"
+	"fmt"
 
 	"github.com/sirupsen/logrus"
 )
@@ -59,8 +60,11 @@ func (m *activityRepositoryMySQL) fetch(query string, args ...interface{}) (aggr
 	return activities, nil
 }
 
-func (m *activityRepositoryMySQL) GetActivity() (res aggregate.Activities, err error) {
-	query := `SELECT id, email, title FROM activities`
+func (m *activityRepositoryMySQL) GetActivity(page int) (res aggregate.Activities, err error) {
+	limit := 10
+	offset := limit * (page - 1)
+	// query := `SELECT id, email,title FROM activities LIMIT  OFFSET $1`
+	query := fmt.Sprintf("SELECT id, email, title FROM activities LIMIT %d OFFSET %d", limit, offset)
 
 	res, err = m.fetch(query)
 	if err != nil {

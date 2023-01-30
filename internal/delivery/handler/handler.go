@@ -16,7 +16,11 @@ type handler struct {
 }
 
 func (h *handler) HandlerGetActivites(c echo.Context) error {
-	activities, err := h.usecaseActivity.GetActivity()
+	// page := c.QueryParam("page")
+	// pages, _ := strconv.ParseInt(page, 10, 32)
+	// activities, err := h.usecaseActivity.GetActivity(int(pages))
+	activities, err := h.usecaseActivity.GetActivity(10)
+
 	if err != nil {
 		log.Println(err)
 

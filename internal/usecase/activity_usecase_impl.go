@@ -10,8 +10,8 @@ type activityUsecase struct {
 	repo repository.ActivityRepository
 }
 
-func (u *activityUsecase) GetActivity() (aggregate.Activities, error) {
-	activity, err := u.repo.GetActivity()
+func (u *activityUsecase) GetActivity(page int) (aggregate.Activities, error) {
+	activity, err := u.repo.GetActivity(page)
 	if err != nil {
 		return nil, err
 	}
