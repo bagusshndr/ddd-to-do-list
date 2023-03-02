@@ -19,10 +19,10 @@ type Activity struct {
 
 func NewActivity(email, title string) (*Activity, error) {
 	if email == "" {
-		return &Activity{}, errors.New("email cannot be empty")
+		return &Activity{}, errors.New("email cannot be null")
 	}
 	if title == "" {
-		return &Activity{}, errors.New("title cannot be empty")
+		return &Activity{}, errors.New("title cannot be null")
 	}
 	return &Activity{
 		Email: email,

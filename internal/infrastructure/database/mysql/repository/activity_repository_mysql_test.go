@@ -18,36 +18,36 @@ type activityRepositoryMysqlTest struct {
 	activityMYSQL repository.ActivityRepository
 }
 
-// func (t *activityRepositoryMysqlTest) TestGetActivity() {
-// 	activity := aggregate.RebuildActivity(1, "bagus@bagus.com", "kerja bro")
-// 	query := `SELECT id, email, title FROM activities`
-// 	t.Run("success", func() {
-// 		rows := sqlmock.NewRows([]string{
-// 			"id",
-// 			"email",
-// 			"title",
-// 		}).AddRow(
-// 			activity.ID,
-// 			activity.Email,
-// 			activity.Title,
-// 		)
+func (t *activityRepositoryMysqlTest) TestGetActivity() {
+	activity := aggregate.RebuildActivity(1, "bagus@bagus.com", "kerja bro")
+	query := `SELECT id, email, title FROM activities`
+	t.Run("success", func() {
+		rows := sqlmock.NewRows([]string{
+			"id",
+			"email",
+			"title",
+		}).AddRow(
+			activity.ID,
+			activity.Email,
+			activity.Title,
+		)
 
-// 		t.mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(rows)
+		t.mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(rows)
 
-// 		actualActivity, err := t.activityMYSQL.GetActivity()
+		actualActivity, err := t.activityMYSQL.GetActivity(10)
 
-// 		t.NotNil(actualActivity)
-// 		t.NoError(err)
-// 	})
-// 	t.Run("failed", func() {
-// 		t.mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnError(errors.New(""))
+		t.NotNil(actualActivity)
+		t.NoError(err)
+	})
+	t.Run("failed", func() {
+		t.mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnError(errors.New(""))
 
-// 		actualActivity, err := t.activityMYSQL.GetActivity()
+		actualActivity, err := t.activityMYSQL.GetActivity(10)
 
-// 		t.Nil(actualActivity)
-// 		t.Error(err)
-// 	})
-// }
+		t.Nil(actualActivity)
+		t.Error(err)
+	})
+}
 
 func (t *activityRepositoryMysqlTest) TestGetActivityByID() {
 	activity := aggregate.RebuildActivity(1, "bagus@bagus.com", "kerja bro")
@@ -84,24 +84,51 @@ func (t *activityRepositoryMysqlTest) TestGetActivityByID() {
 
 }
 
-// func (t *activityRepositoryMysqlTest) TestCreate() {
-// 	activity := aggregate.RebuildActivity(1, "bagus@bagus.com", "kerja bro")
+func (t *activityRepositoryMysqlTest) TestCreate() {
+	t.Run("success", func() {
+		t.mock.ExpectExec("INSERT INTO activities").WillReturnResult(sqlmock.NewResult(1, 1))
+		_, err := t.activityMYSQL.CreateActivity("email@gmail.com", "title")
+		t.NoError(err)
+	})
+
+	t.Run("failed", func() {
+		t.mock.ExpectExec("INSERT INTO activities").WillReturnError(errors.New("failed store activity"))
+		_, err := t.activityMYSQL.CreateActivity("email@gmail.com", "title")
+		t.Error(err)
+	})
+}
+
+// func (t *activityRepositoryMysqlTest) TestUpdate() {
+// 	queryUpdate := "UPDATE activities SET email = ?, title = ? WHERE id = ?"
 
 // 	t.Run("success", func() {
-// 		t.mock.ExpectExec("INSERT INTO activities").WithArgs(
-// 			activity.Email,
-// 		).WillReturnResult(sqlmock.NewResult(1, 1))
-// 		t.NoError(t.activityMYSQL.CreateActivity(activity.Email, activity.Title))
+// 		t.mock.ExpectExec(queryUpdate).WithArgs("email@gmail.com", "title", 1).WillReturnResult(sqlmock.NewResult(1, 1))
+
+// 		t.NoError(t.activityMYSQL.UpdateActivity(1, "email@gmail.com", "title"))
 // 	})
 
-// 	t.Run("failed created", func() {
-// 		t.mock.ExpectExec("INSERT INTO activities").WithArgs(
-// 			activity.Email,
-// 		).WillReturnError(errors.New(""))
-// 		t.Error(t.activityMYSQL.CreateActivity(activity.Email, activity.Title))
-// 	})
+// 	// t.Run("failed", func() {
+// 	// 	t.mock.ExpectExec(queryUpdateAwb).WithArgs("ABC123").WillReturnError(errors.New("failed update awb"))
 
+// 	// 	t.Error(t.awbRepositoryMySQL.UpdateAwb("ABC123"))
+// 	// })
 // }
+
+func (t *activityRepositoryMysqlTest) TestDelete() {
+	queryDelete := "DELETE FROM activities WHERE id = ?"
+
+	t.Run("success", func() {
+		t.mock.ExpectExec(queryDelete).WithArgs(1).WillReturnResult(sqlmock.NewResult(1, 1))
+
+		t.NoError(t.activityMYSQL.DeleteActivity(1))
+	})
+
+	t.Run("failed", func() {
+		t.mock.ExpectExec(queryDelete).WillReturnError(errors.New("failed delete activity"))
+
+		t.Error(t.activityMYSQL.DeleteActivity(1))
+	})
+}
 
 func TestActivityRepositoryMySQL(t *testing.T) {
 	db, mock, _ := sqlmock.New()

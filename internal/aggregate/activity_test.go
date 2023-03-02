@@ -12,6 +12,11 @@ func TestActivity(t *testing.T) {
 		assert.NotNil(t, newActivity)
 	})
 
+	t.Run("new activity", func(t *testing.T) {
+		_, err := NewActivity("bagus@bagus.com", "")
+		assert.Error(t, err)
+	})
+
 	t.Run("new activity without email", func(t *testing.T) {
 		activity, err := NewActivity("", "kerja bro")
 		assert.NotNil(t, activity)
@@ -26,6 +31,11 @@ func TestActivity(t *testing.T) {
 
 	t.Run("new activity", func(t *testing.T) {
 		rebuildActivity := RebuildActivity(1, "bagus@bagus.com", "kerja bro")
+		assert.NotNil(t, rebuildActivity)
+	})
+
+	t.Run("new activity", func(t *testing.T) {
+		rebuildActivity := RebuildActivities(1, "bagus@bagus.com", "kerja bro")
 		assert.NotNil(t, rebuildActivity)
 	})
 }

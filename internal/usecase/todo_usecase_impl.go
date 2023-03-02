@@ -19,12 +19,9 @@ func (u *todoUsecase) GetTodo() (aggregate.Todos, error) {
 }
 
 func (u *todoUsecase) GetTodoByID(id uint64) (aggregate.Todos, error) {
-	todo, err := u.repo.GetTodoByID(id)
+	todo, _ := u.repo.GetTodoByID(id)
 	if len(todo) <= 0 {
 		return nil, errors.New("data not found")
-	}
-	if err != nil {
-		return nil, err
 	}
 	return todo, nil
 }

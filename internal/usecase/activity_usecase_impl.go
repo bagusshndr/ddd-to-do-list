@@ -19,12 +19,9 @@ func (u *activityUsecase) GetActivity(page int) (aggregate.Activities, error) {
 }
 
 func (u *activityUsecase) GetActivityByID(id uint64) (aggregate.Activities, error) {
-	activity, err := u.repo.GetActivityByID(id)
+	activity, _ := u.repo.GetActivityByID(id)
 	if len(activity) <= 0 {
 		return nil, errors.New("data not found")
-	}
-	if err != nil {
-		return nil, err
 	}
 	return activity, nil
 }

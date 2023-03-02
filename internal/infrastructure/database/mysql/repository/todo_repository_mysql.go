@@ -99,10 +99,8 @@ func (m *todoRepositoryMysql) CreateTodo(activitGroupID int, title, priority str
 	if err != nil {
 		return 0, err
 	}
-	id, err := res.LastInsertId()
-	if err != nil {
-		return 0, err
-	}
+	id, _ := res.LastInsertId()
+
 	uId := uint64(id)
 	return uId, nil
 }
