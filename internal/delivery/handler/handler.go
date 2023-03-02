@@ -16,11 +16,7 @@ type handler struct {
 }
 
 func (h *handler) HandlerGetActivites(c echo.Context) error {
-	// page := c.QueryParam("page")
-	// pages, _ := strconv.ParseInt(page, 10, 32)
-	// activities, err := h.usecaseActivity.GetActivity(int(pages))
 	activities, err := h.usecaseActivity.GetActivity(10)
-
 	if err != nil {
 		log.Println(err)
 
@@ -66,10 +62,10 @@ func (h *handler) HandlerCreateActivity(c echo.Context) error {
 	var body ReqCreateActivity
 	c.Bind(&body)
 	if body.Email == "" {
-		return shared.NewResponse("Bad Request", 400, "email cannot be empty", nil, FailedActivityResponse{}).JSON(c)
+		return shared.NewResponse("Bad Request", 400, "email cannot be null", nil, FailedActivityResponse{}).JSON(c)
 	}
 	if body.Title == "" {
-		return shared.NewResponse("Bad Request", 400, "title cannot be empty", nil, FailedActivityResponse{}).JSON(c)
+		return shared.NewResponse("Bad Request", 400, "title cannot be null", nil, FailedActivityResponse{}).JSON(c)
 	}
 	id, err := h.usecaseActivity.CreateActivity(body.Email, body.Title)
 
@@ -87,10 +83,10 @@ func (h *handler) HandlerCreateTodo(c echo.Context) error {
 		return shared.NewResponse("Bad Request", 400, "acitivity group id cannot be null", nil, FailedActivityResponse{}).JSON(c)
 	}
 	if body.Title == "" {
-		return shared.NewResponse("Bad Request", 400, "title cannot be empty", nil, FailedActivityResponse{}).JSON(c)
+		return shared.NewResponse("Bad Request", 400, "title cannot be null", nil, FailedActivityResponse{}).JSON(c)
 	}
 	if body.Priority == "" {
-		return shared.NewResponse("Bad Request", 400, "priority cannot be empty", nil, FailedActivityResponse{}).JSON(c)
+		return shared.NewResponse("Bad Request", 400, "priority cannot be null", nil, FailedActivityResponse{}).JSON(c)
 	}
 	id, err := h.usecaseTodo.CreateTodo(body.ActivityGroupID, body.Title, body.Priority)
 	if err != nil {
@@ -108,10 +104,10 @@ func (h *handler) HandlerUpdateActivity(c echo.Context) error {
 	id := c.Param("id")
 	uid, _ := strconv.ParseUint(id, 10, 32)
 	if body.Email == "" {
-		return shared.NewResponse("Bad Request", 400, "email cannot be empty", nil, FailedActivityResponse{}).JSON(c)
+		return shared.NewResponse("Bad Request", 400, "email cannot be null", nil, FailedActivityResponse{}).JSON(c)
 	}
 	if body.Title == "" {
-		return shared.NewResponse("Bad Request", 400, "title cannot be empty", nil, FailedActivityResponse{}).JSON(c)
+		return shared.NewResponse("Bad Request", 400, "title cannot be null", nil, FailedActivityResponse{}).JSON(c)
 	}
 	err := h.usecaseActivity.UpdateActivity(uid, body.Email, body.Title)
 	if err != nil {
@@ -131,10 +127,10 @@ func (h *handler) HandlerUpdateTodo(c echo.Context) error {
 		return shared.NewResponse("Bad Request", 400, "acitivity group id cannot be null", nil, FailedActivityResponse{}).JSON(c)
 	}
 	if body.Title == "" {
-		return shared.NewResponse("Bad Request", 400, "title cannot be empty", nil, FailedActivityResponse{}).JSON(c)
+		return shared.NewResponse("Bad Request", 400, "title cannot be null", nil, FailedActivityResponse{}).JSON(c)
 	}
 	if body.Priority == "" {
-		return shared.NewResponse("Bad Request", 400, "priority cannot be empty", nil, FailedActivityResponse{}).JSON(c)
+		return shared.NewResponse("Bad Request", 400, "priority cannot be null", nil, FailedActivityResponse{}).JSON(c)
 	}
 	err := h.usecaseTodo.UpdateTodo(uid, body.ActivityGroupID, body.IsActive, body.Title, body.Priority)
 	if err != nil {
